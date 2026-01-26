@@ -22,7 +22,7 @@ export const ArchitecturalHero = () => {
   const TITLE_COLOR = '#8EAFC1';
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-white">
+    <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-white dark:bg-zinc-900 transition-colors duration-300">
       {/* Hero Images Wrapper */}
       <div className="relative w-full h-full">
         
@@ -35,7 +35,7 @@ export const ArchitecturalHero = () => {
         <div className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden pointer-events-none">
           <motion.h1 
             style={{ y: textY, opacity: textOpacity, color: TITLE_COLOR }}
-            className="text-[18vw] font-bold leading-none tracking-tighter select-none whitespace-nowrap"
+            className="text-[18vw] font-bold leading-none tracking-tighter select-none whitespace-nowrap drop-shadow-sm"
           >
             TILES N FITT
           </motion.h1>
@@ -53,14 +53,14 @@ export const ArchitecturalHero = () => {
             initial={{ x: -100, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="w-32 h-32 bg-zinc-900/10 backdrop-blur-sm"
+            className="w-32 h-32 bg-zinc-900/10 dark:bg-white/5 backdrop-blur-sm"
           />
           {/* Right Overlay Block */}
           <motion.div 
             initial={{ x: 100, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="w-32 h-32 bg-zinc-900/10 backdrop-blur-sm"
+            className="w-32 h-32 bg-zinc-900/10 dark:bg-white/5 backdrop-blur-sm"
           />
         </div>
 

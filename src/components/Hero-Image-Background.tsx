@@ -2,7 +2,7 @@ export function HeroImageBackground() {
   return (
     <div className="absolute inset-0 w-full h-full">
       <img
-        src={`${import.meta.env.BASE_URL}Hero-Image-Background.webp`}
+        src={`${import.meta.env.BASE_URL}Hero Home/Hero-Image-Background.webp`}
         alt="Hero background sky"
         className="w-full h-full object-cover"
       />
