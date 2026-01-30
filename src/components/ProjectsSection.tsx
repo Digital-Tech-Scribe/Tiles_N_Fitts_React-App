@@ -3,7 +3,7 @@ import { projects } from '../data/projects';
 import { Link } from 'react-router-dom';
 
 export function ProjectsSection() {
-  const featuredProjectTitles = ['GWARINPA ESTATE', 'BTQ HOTEL', 'URBLE'];
+  const featuredProjectTitles = ['VERIDIAN', 'YANGO HOTEL', 'URBLE'];
   const featuredProjects = projects.filter(project => featuredProjectTitles.includes(project.title));
 
   return <section id="projects" className="py-24 md:py-32 px-6 md:px-12 bg-white dark:bg-zinc-900 transition-colors duration-300">
