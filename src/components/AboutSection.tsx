@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 export function AboutSection() {
-  return <section id="about" className="py-24 md:py-32 px-6 md:px-12 bg-white dark:bg-zinc-900 transition-colors duration-300">
+  return <section id="about" className="py-24 md:py-32 px-6 md:px-12 bg-warm-light dark:bg-zinc-900 transition-colors duration-300">
       <div className="max-w-[1920px] mx-auto">
         <div className="flex flex-col md:flex-row gap-12 md:gap-24">
           {/* Left Column - Heading */}

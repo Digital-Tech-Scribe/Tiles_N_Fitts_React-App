@@ -22,7 +22,7 @@ export const ArchitecturalHero = () => {
   const TITLE_COLOR = '#8EAFC1';
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-white dark:bg-zinc-900 transition-colors duration-300">
+    <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-warm-light dark:bg-zinc-900 transition-colors duration-300">
       {/* Hero Images Wrapper */}
       <div className="relative w-full h-full">
         
@@ -46,23 +46,7 @@ export const ArchitecturalHero = () => {
           <HeroImageForeground />
         </div>
 
-        {/* 4. Animated Overlay Blocks */}
-        <div className="absolute inset-0 z-30 pointer-events-none flex justify-between items-end p-8">
-          {/* Left Overlay Block */}
-          <motion.div 
-            initial={{ x: -100, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="w-32 h-32 bg-zinc-900/10 dark:bg-white/5 backdrop-blur-sm"
-          />
-          {/* Right Overlay Block */}
-          <motion.div 
-            initial={{ x: 100, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="w-32 h-32 bg-zinc-900/10 dark:bg-white/5 backdrop-blur-sm"
-          />
-        </div>
+
 
       </div>
     </section>

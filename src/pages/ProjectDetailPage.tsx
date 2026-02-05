@@ -28,7 +28,7 @@ export function ProjectDetailPage() {
   
   if (!project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white transition-colors duration-300">
+      <div className="min-h-screen flex items-center justify-center bg-warm-light dark:bg-zinc-900 text-zinc-900 dark:text-white transition-colors duration-300">
         <h1 className="text-4xl font-bold">Project Not Found</h1>
       </div>
     );
@@ -54,7 +54,7 @@ export function ProjectDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors duration-300 text-zinc-900 dark:text-white">
+    <div className="min-h-screen bg-warm-light dark:bg-zinc-900 transition-colors duration-300 text-zinc-900 dark:text-white">
       
       {/* 1. Hero Section (First Image) */}
       <div className="h-[80vh] md:h-[90vh] w-full relative">
@@ -156,7 +156,7 @@ export function ProjectDetailPage() {
                 key={p.id} 
                 className="group flex-shrink-0 w-[85vw] md:w-[400px] xl:w-[500px] 2xl:w-[600px] snap-start"
               >
-                <div className="aspect-[4/3] bg-white dark:bg-zinc-900 overflow-hidden mb-6 relative rounded-lg">
+                <div className="aspect-[4/3] bg-warm-light dark:bg-zinc-900 overflow-hidden mb-6 relative rounded-lg">
                   <img 
                     src={p.image} 
                     alt={p.title} 
@@ -185,7 +185,7 @@ export function ProjectDetailPage() {
               className="absolute top-0 right-0 bottom-0 w-[150px] md:w-[200px] z-30 flex items-center justify-end pr-12 cursor-pointer bg-gradient-to-l from-zinc-50 dark:from-zinc-800 via-zinc-50/80 dark:via-zinc-800/80 to-transparent group"
               onClick={scrollRight}
             >
-              <div className="w-16 h-16 bg-zinc-900 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-900 shadow-xl transform transition-all duration-300 group-hover:scale-110 group-hover:translate-x-1 group-hover:bg-zinc-800 dark:group-hover:bg-zinc-100 active:scale-95">
+              <div className="w-16 h-16 bg-zinc-900 dark:bg-warm-light rounded-full flex items-center justify-center text-white dark:text-zinc-900 shadow-xl transform transition-all duration-300 group-hover:scale-110 group-hover:translate-x-1 group-hover:bg-zinc-800 dark:group-hover:bg-zinc-100 active:scale-95">
                 <ChevronRight size={32} />
               </div>
             </div>

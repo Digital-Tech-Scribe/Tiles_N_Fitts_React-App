@@ -1,5 +1,5 @@
 export function Footer() {
-  return <footer className="bg-white dark:bg-zinc-900 py-24 px-6 md:px-12 border-t border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+  return <footer className="bg-warm-light dark:bg-zinc-900 py-24 px-6 md:px-12 border-t border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
       <div className="max-w-[1920px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="space-y-6">
           <h4 className="text-xl font-medium text-zinc-900 dark:text-white">Quick Links</h4>
@@ -75,7 +75,7 @@ export function Footer() {
             <label className="text-sm text-zinc-500 dark:text-zinc-400">Your email address</label>
             <div className="flex flex-col gap-2">
               <input type="email" className="w-full bg-zinc-50 dark:bg-zinc-800 border-none p-3 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-zinc-400 text-zinc-900 dark:text-white" />
-              <button type="submit" className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-bold uppercase tracking-widest py-3 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors">
+              <button type="submit" className="bg-zinc-900 dark:bg-warm-light text-white dark:text-zinc-900 text-xs font-bold uppercase tracking-widest py-3 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors">
                 Submit
               </button>
             </div>

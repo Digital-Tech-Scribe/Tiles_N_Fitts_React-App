@@ -19,7 +19,7 @@ const stats = [{
   label: 'Satisfied clients'
 }];
 export function StatsSection() {
-  return <section className="py-24 px-6 md:px-12 bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+  return <section className="py-24 px-6 md:px-12 bg-warm-light dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
       <div className="max-w-[1920px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {stats.map((stat, index) => <motion.div key={index} initial={{

@@ -82,8 +82,8 @@ export function Header() {
   return (
     <motion.header 
       className={`fixed top-0 left-0 right-0 z-[99999] px-6 md:px-12 py-6 transition-colors duration-300 ${
-        isScrolled 
-          ? 'bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-sm border-b border-zinc-200 dark:border-zinc-800' 
+        isScrolled || !isHome
+          ? 'bg-warm-light/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-sm border-b border-warm-charcoal/10 dark:border-zinc-800' 
           : 'bg-transparent'
       }`} 
       initial={{ y: -100 }} 
@@ -93,9 +93,11 @@ export function Header() {
       <div className="max-w-[1920px] mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-4 group">
           <img 
-            src={`${import.meta.env.BASE_URL}Logo/logo.png`} 
+            src={`${import.meta.env.BASE_URL}Logo/logo_${effectiveTheme}-mode.png`} 
             alt="Tiles N Fitt Logo" 
-            className="w-12 h-12 object-contain transition-transform duration-500 group-hover:scale-110"
+            className={`w-12 h-12 object-contain transition-all duration-500 group-hover:scale-110 ${
+              effectiveTheme === 'light' ? 'scale-[1.6]' : ''
+            }`}
           />
           <div className="flex flex-col">
             <span className={`text-2xl font-bold tracking-tight uppercase transition-colors ${
@@ -137,7 +139,7 @@ export function Header() {
                   {isActive && (
                     <motion.div
                       layoutId="activeNavTab"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-zinc-900 dark:bg-white"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-zinc-900 dark:bg-warm-light"
                       initial={{ opacity: 0, scaleX: 0 }}
                       animate={{ opacity: 1, scaleX: 1 }}
                       exit={{ opacity: 0, scaleX: 0 }}
@@ -148,7 +150,7 @@ export function Header() {
                 
                 {isActive && (
                   <motion.div
-                    className="absolute -right-2 top-2 w-1.5 h-1.5 rounded-full bg-zinc-900 dark:bg-white"
+                    className="absolute -right-2 top-2 w-1.5 h-1.5 rounded-full bg-zinc-900 dark:bg-warm-light"
                     layoutId="activeNavMark"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
@@ -220,7 +222,7 @@ export function Header() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="fixed top-24 left-0 right-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-lg border-b border-zinc-200 dark:border-zinc-800 md:hidden z-[99998] overflow-hidden"
+              className="fixed top-24 left-0 right-0 bg-warm-light/95 dark:bg-zinc-900/95 backdrop-blur-lg border-b border-zinc-200 dark:border-zinc-800 md:hidden z-[99998] overflow-hidden"
             >
               <div className="flex flex-col p-8 space-y-6">
                 {navItems.map((item) => {
@@ -244,7 +246,7 @@ export function Header() {
                       {isActive && (
                         <motion.div 
                           layoutId="activeMarkMobile"
-                          className="w-12 h-0.5 bg-zinc-900 dark:bg-white" 
+                          className="w-12 h-0.5 bg-zinc-900 dark:bg-warm-light" 
                         />
                       )}
                     </motion.a>

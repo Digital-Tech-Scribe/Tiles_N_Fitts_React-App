@@ -24,7 +24,7 @@ const services = [{
 }];
 export function ServicesSection() {
   const [activeService, setActiveService] = useState<string | null>('01');
-  return <section id="services" className="py-24 md:py-32 px-6 md:px-12 bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+  return <section id="services" className="py-24 md:py-32 px-6 md:px-12 bg-warm-light dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
       <div className="max-w-[1920px] mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-24">
           {/* Left Column - Heading */}

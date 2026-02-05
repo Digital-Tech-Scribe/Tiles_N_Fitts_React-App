@@ -6,7 +6,7 @@ export function ProjectsSection() {
   const featuredProjectTitles = ['VERIDIAN', 'YANGO HOTEL', 'URBLE'];
   const featuredProjects = projects.filter(project => featuredProjectTitles.includes(project.title));
 
-  return <section id="projects" className="py-24 md:py-32 px-6 md:px-12 bg-white dark:bg-zinc-900 transition-colors duration-300">
+  return <section id="projects" className="py-24 md:py-32 px-6 md:px-12 bg-warm-light dark:bg-zinc-900 transition-colors duration-300">
       <div className="max-w-[1920px] mx-auto">
         <motion.h2 initial={{
         opacity: 0,
@@ -26,7 +26,7 @@ export function ProjectsSection() {
                 <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
 
                 {/* Hover Overlay Card */}
-                <div className="absolute top-1/2 right-12 md:right-24 -translate-y-1/2 w-[400px] bg-white dark:bg-zinc-950 p-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden md:block shadow-xl">
+                <div className="absolute top-1/2 right-12 md:right-24 -translate-y-1/2 w-[400px] bg-warm-light dark:bg-zinc-950 p-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden md:block shadow-xl">
                   <h3 className="text-3xl font-medium text-zinc-900 dark:text-white mb-2">
                     {project.title}
                   </h3>
@@ -40,7 +40,7 @@ export function ProjectsSection() {
                   <p className="text-zinc-600 dark:text-zinc-300 mb-8 leading-relaxed line-clamp-3">
                     {project.description}
                   </p>
-                  <Link to={`/project/${project.id}`} className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors inline-block">
+                  <Link to={`/project/${project.id}`} className="bg-zinc-900 dark:bg-warm-light text-white dark:text-zinc-900 px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors inline-block">
                     See Project
                   </Link>
                 </div>

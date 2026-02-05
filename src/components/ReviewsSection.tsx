@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+
 
 const reviews = [
   {
@@ -22,32 +22,41 @@ const reviews = [
 
 export function ReviewsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [direction, setDirection] = useState(0);
 
-  const slideVariants = {
+  // Auto-scroll timer
+  useEffect(() => {
+    if (isPaused) return;
+    
+    const interval = setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((prev) => (prev + 1) % reviews.length);
+    }, 6000); // 6 seconds per review
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  const variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 100 : -100,
+      x: direction > 0 ? 300 : -300,
       opacity: 0
     }),
     center: {
-      zIndex: 1,
       x: 0,
       opacity: 1
     },
     exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 100 : -100,
+      x: direction < 0 ? 300 : -300,
       opacity: 0
     })
   };
 
-  const traverse = (newDirection: number) => {
-    setDirection(newDirection);
-    setCurrentIndex((prevIndex) => (prevIndex + newDirection + reviews.length) % reviews.length);
-  };
-
   return (
-    <section id="reviews" className="py-32 px-6 md:px-12 bg-zinc-900 dark:bg-zinc-950 text-white transition-colors duration-300 overflow-hidden">
+    <section 
+      id="reviews" 
+      className="py-32 px-6 md:px-12 bg-zinc-900 dark:bg-zinc-950 text-white transition-colors duration-300 overflow-hidden"
+    >
       <div className="max-w-4xl mx-auto text-center">
         <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-8 block">
           Hear our clients
@@ -56,46 +65,59 @@ export function ReviewsSection() {
           Reviews
         </h2>
 
-        <div className="relative min-h-[200px] flex items-center justify-center">
-          <AnimatePresence initial={false} custom={direction} mode="wait">
+        <div 
+          className="relative min-h-[300px] flex flex-col items-center justify-center cursor-default"
+        >
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentIndex}
               custom={direction}
-              variants={slideVariants}
+              variants={variants}
               initial="enter"
               animate="center"
               exit="exit"
               transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
+                x: { 
+                  type: "tween", 
+                  ease: [0.25, 0.1, 0.25, 1],
+                  duration: 0.15
+                },
+                opacity: { duration: 0.1 }
               }}
-              className="absolute w-full"
+              className="absolute w-full px-4"
             >
-              <p className="text-xl md:text-2xl leading-relaxed text-zinc-300 dark:text-zinc-400 mb-8 font-light italic">
+              <p 
+                className="text-xl md:text-3xl leading-relaxed text-zinc-300 dark:text-zinc-400 mb-10 font-light italic cursor-text"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+              >
                 "{reviews[currentIndex].text}"
               </p>
               <div className="flex flex-col items-center">
-                <span className="text-lg font-semibold text-zinc-100 uppercase tracking-wider">{reviews[currentIndex].author}</span>
-                <span className="text-sm text-zinc-500 uppercase tracking-widest">{reviews[currentIndex].location}</span>
+                <span className="text-lg font-semibold text-zinc-100 uppercase tracking-wider mb-1">
+                  {reviews[currentIndex].author}
+                </span>
+                <span className="text-sm text-zinc-500 uppercase tracking-widest">
+                  {reviews[currentIndex].location}
+                </span>
               </div>
             </motion.div>
           </AnimatePresence>
+
+          {/* Progress Indicators */}
+          <div className="absolute bottom-0 flex gap-3 mt-12">
+            {reviews.map((_, idx) => (
+              <div 
+                key={idx}
+                className={`h-1 rounded-full transition-all duration-500 ${
+                  idx === currentIndex ? "w-8 bg-white" : "w-2 bg-zinc-700"
+                }`}
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="flex justify-center gap-4 mt-12 relative z-10">
-          <button 
-            onClick={() => traverse(-1)}
-            className="p-4 rounded-full border border-zinc-700 dark:border-zinc-800 hover:bg-zinc-800 dark:hover:bg-zinc-800 transition-colors group"
-          >
-            <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
-          </button>
-          <button 
-            onClick={() => traverse(1)}
-            className="p-4 rounded-full border border-zinc-700 dark:border-zinc-800 hover:bg-zinc-800 dark:hover:bg-zinc-800 transition-colors group"
-          >
-            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
+
       </div>
     </section>
   );
