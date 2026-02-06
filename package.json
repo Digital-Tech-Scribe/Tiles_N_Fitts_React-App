@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "homepage": "https://andychuks51.github.io/Tiles_N_Fitts_React-App/",
+  "homepage": "https://digital-tech-scribe.github.io/Tiles_N_Fitts_React-App/",
   "scripts": {
     "dev": "npx vite",
     "build": "npx vite build",
