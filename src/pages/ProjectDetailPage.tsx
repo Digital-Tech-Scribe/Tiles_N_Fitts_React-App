@@ -62,6 +62,7 @@ export function ProjectDetailPage() {
         <img 
           src={project.image} 
           alt={project.title} 
+          loading="lazy"
           className="w-full h-full object-cover"
         />
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-20 text-white">
@@ -160,6 +161,7 @@ export function ProjectDetailPage() {
                   <img 
                     src={p.image} 
                     alt={p.title} 
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />

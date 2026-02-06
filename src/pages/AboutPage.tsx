@@ -33,6 +33,7 @@ const TeamMemberCard = ({ member, index }: { member: TeamMember; index: number }
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Portrait Image Container - With smooth sliding animation */}
+            {/* Portrait Image Container - With smooth sliding animation */}
             <div className="aspect-[3/4] mb-4 overflow-hidden relative">
                 {hasHoverEffect ? (
                     <>
@@ -46,6 +47,7 @@ const TeamMemberCard = ({ member, index }: { member: TeamMember; index: number }
                             <img 
                                 src={`${import.meta.env.BASE_URL}About Us View/our-family/${member.sittingImage}`}
                                 alt={`${member.name} - sitting`}
+                                loading="lazy"
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -59,6 +61,7 @@ const TeamMemberCard = ({ member, index }: { member: TeamMember; index: number }
                             <img 
                                 src={`${import.meta.env.BASE_URL}About Us View/our-family/${member.standingImage}`}
                                 alt={`${member.name} - standing`}
+                                loading="lazy"
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -69,6 +72,7 @@ const TeamMemberCard = ({ member, index }: { member: TeamMember; index: number }
                         <img 
                             src={`${import.meta.env.BASE_URL}About Us View/our-family/${primaryImage}`}
                             alt={member.name}
+                            loading="lazy"
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -151,6 +155,7 @@ export const AboutPage = () => {
                         <img 
                             src={`${import.meta.env.BASE_URL}About Us View/our-family/The_people.jpeg`}
                             alt="The Team"
+                            loading="lazy"
                             className="w-full h-full object-cover [@media(min-width:1024px)_and_(max-width:1265px)]:object-contain object-[58%_center]"
                         />
                     </div>
