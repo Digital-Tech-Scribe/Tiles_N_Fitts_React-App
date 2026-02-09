@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { usePageLoading } from '../contexts/LoadingContext';
+import { MiniLoader } from './MiniLoader';
 
 interface OptimizedImageProps {
   src: string;
@@ -6,16 +8,10 @@ interface OptimizedImageProps {
   className?: string;
   containerClassName?: string;
   onLoad?: () => void;
-  priority?: boolean; // If true, load immediately without lazy loading
-  skipFadeIn?: boolean; // If true, skip shimmer and fade-in
+  priority?: boolean;
+  skipFadeIn?: boolean;
 }
 
-/**
- * OptimizedImage component with shimmer placeholder and smooth fade-in
- * - Shows animated shimmer during load
- * - Fades in gracefully when loaded
- * - Handles error states
- */
 export function OptimizedImage({
   src,
   alt,
@@ -25,43 +21,67 @@ export function OptimizedImage({
   priority = false, // Default to false
   skipFadeIn = false // Default to false
 }: OptimizedImageProps) {
-  const [isLoaded, setIsLoaded] = useState(skipFadeIn); // Initialize as loaded if skipFadeIn is true
+  const { registerImageLoad } = usePageLoading();
+  const [isLoaded, setIsLoaded] = useState(skipFadeIn);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  
+  // We need to hold the unregister function.
+  const unregisterRef = useRef<(() => void) | null>(null);
 
-  // Check if image is already cached
   useEffect(() => {
+    if (skipFadeIn) return;
+
+    // Register
+    unregisterRef.current = registerImageLoad();
+
+    // Check immediate cache
     if (imgRef.current?.complete && imgRef.current?.naturalHeight !== 0) {
-      if (!skipFadeIn) setIsLoaded(true);
-      onLoad?.();
+        setIsLoaded(true);
+        if (unregisterRef.current) {
+            unregisterRef.current();
+            unregisterRef.current = null;
+        }
+        onLoad?.();
     }
+    
+    return () => {
+        // Unregister on unmount
+        if (unregisterRef.current) {
+            unregisterRef.current();
+            unregisterRef.current = null;
+        }
+    };
   }, [src, skipFadeIn]);
 
-  const handleLoad = () => {
-    setIsLoaded(true);
-    onLoad?.();
+  const onImageLoad = () => {
+      setIsLoaded(true);
+      if (unregisterRef.current) {
+          unregisterRef.current();
+          unregisterRef.current = null;
+      }
+      onLoad?.();
   };
 
   const handleError = () => {
     setHasError(true);
+    if (unregisterRef.current) {
+        unregisterRef.current();
+        unregisterRef.current = null;
+    }
   };
 
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
-      {/* Shimmer Placeholder - Only show if NOT loaded and NO error and NOT skipping fade in */}
+      {/* MiniLoader - Only show if NOT loaded and NO error and NOT skipping fade in */}
       {!isLoaded && !hasError && !skipFadeIn && (
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-800 animate-shimmer"
-          style={{
-            backgroundSize: '200% 100%',
-          }}
-        />
+        <MiniLoader />
       )}
 
       {/* Error State */}
       {hasError && (
         <div className="absolute inset-0 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
-          <span className="text-zinc-400 dark:text-zinc-500 text-sm">Failed to load</span>
+          <span className="text-zinc-400 dark:text-zinc-500 text-sm">Failed</span>
         </div>
       )}
 
@@ -72,7 +92,7 @@ export function OptimizedImage({
         alt={alt}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
-        onLoad={handleLoad}
+        onLoad={onImageLoad}
         onError={handleError}
         className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : (skipFadeIn ? 'opacity-100' : 'opacity-0')} ${className}`}
       />
