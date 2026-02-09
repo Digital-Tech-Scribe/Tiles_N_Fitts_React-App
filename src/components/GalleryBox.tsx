@@ -89,6 +89,7 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
             src={sequence[index]}
             alt="Gallery item"
             priority={true} // Priority true because we pre-loaded it!
+            skipFadeIn={true} // Skip fade-in animation to prevent flicker
             className="w-full h-full object-cover pointer-events-none"
             containerClassName="w-full h-full"
           />

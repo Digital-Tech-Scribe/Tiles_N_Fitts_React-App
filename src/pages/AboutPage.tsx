@@ -162,7 +162,7 @@ export const AboutPage = () => {
             <section className="px-6 md:px-12 pt-32 lg:pt-40 pb-24">
                 <div className="max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
                     {/* Left: Hero Image */}
-                    <div className="lg:col-span-7 h-[50vh] lg:h-[70vh] overflow-hidden rounded-2xl shadow-xl">
+                    <div className="lg:col-span-7 aspect-video lg:h-[70vh] lg:aspect-auto overflow-hidden rounded-2xl shadow-xl">
                         <OptimizedImage 
                             src={`${import.meta.env.BASE_URL}About Us View/our-family/The_people.jpeg`}
                             alt="The Team"

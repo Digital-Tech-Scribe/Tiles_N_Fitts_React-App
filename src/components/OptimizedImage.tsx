@@ -7,6 +7,7 @@ interface OptimizedImageProps {
   containerClassName?: string;
   onLoad?: () => void;
   priority?: boolean; // If true, load immediately without lazy loading
+  skipFadeIn?: boolean; // If true, skip shimmer and fade-in
 }
 
 /**
@@ -21,19 +22,20 @@ export function OptimizedImage({
   className = '',
   containerClassName = '',
   onLoad,
-  priority = false
+  priority = false, // Default to false
+  skipFadeIn = false // Default to false
 }: OptimizedImageProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(skipFadeIn); // Initialize as loaded if skipFadeIn is true
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
   // Check if image is already cached
   useEffect(() => {
     if (imgRef.current?.complete && imgRef.current?.naturalHeight !== 0) {
-      setIsLoaded(true);
+      if (!skipFadeIn) setIsLoaded(true);
       onLoad?.();
     }
-  }, [src]);
+  }, [src, skipFadeIn]);
 
   const handleLoad = () => {
     setIsLoaded(true);
@@ -46,8 +48,8 @@ export function OptimizedImage({
 
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
-      {/* Shimmer Placeholder */}
-      {!isLoaded && !hasError && (
+      {/* Shimmer Placeholder - Only show if NOT loaded and NO error and NOT skipping fade in */}
+      {!isLoaded && !hasError && !skipFadeIn && (
         <div 
           className="absolute inset-0 bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-800 animate-shimmer"
           style={{
@@ -72,7 +74,7 @@ export function OptimizedImage({
         decoding="async"
         onLoad={handleLoad}
         onError={handleError}
-        className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${className}`}
+        className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : (skipFadeIn ? 'opacity-100' : 'opacity-0')} ${className}`}
       />
     </div>
   );
