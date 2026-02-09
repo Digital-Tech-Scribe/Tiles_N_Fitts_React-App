@@ -15,7 +15,7 @@ export const Home = () => {
 
     useEffect(() => {
         const heroBg = `${import.meta.env.BASE_URL}Hero Home/Hero-Image-Background.webp`;
-        const heroFg = `${import.meta.env.BASE_URL}Hero Home/Hero-Image-Foreground.png`;
+        const heroFg = `${import.meta.env.BASE_URL}Hero Home/Hero-Image-Foreground.webp`;
         
         // Simple image preloader
         const preloadImage = (src: string) => {

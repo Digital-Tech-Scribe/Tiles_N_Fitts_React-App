@@ -100,7 +100,7 @@ export const AboutPage = () => {
     const { setIsLoading } = usePageLoading();
 
     useEffect(() => {
-        const heroImage = `${import.meta.env.BASE_URL}About Us View/our-family/The_people.jpeg`;
+        const heroImage = `${import.meta.env.BASE_URL}About Us View/our-family/The_people.webp`;
         const img = new Image();
         img.src = heroImage;
         img.onload = () => setTimeout(() => setIsLoading(false), 300);
@@ -114,44 +114,44 @@ export const AboutPage = () => {
             name: "Arc. GbemiLeke", 
             title: "Director", 
             education: "Bsc. Msc. Arch", 
-            sittingImage: "Arc-Leke_standing.jpeg",
-            standingImage: "Arc-Leke_sitting.jpeg"
+            sittingImage: "Arc-Leke_standing.webp",
+            standingImage: "Arc-Leke_sitting.webp"
         },
         // Lead Architect
         { 
             name: "Yazeed", 
             title: "Lead Design Architect", 
             education: "Bsc. Arch", 
-            standingImage: "Yazeed_standing.jpeg"
+            standingImage: "Yazeed_standing.webp"
         },
         // Korede
         { 
             name: "Korede", 
             title: "Architect", 
             education: "Bsc. Arch", 
-            standingImage: "Korede_standing.jpeg"
+            standingImage: "Korede_standing.webp"
         },
         // Azeez
         { 
             name: "Alfred", 
             title: "Architect", 
             education: "Bsc. Arch", 
-            sittingImage: "Alfred_sitting.jpeg"
+            sittingImage: "Alfred_sitting.webp"
         },
         // Samuel
         { 
             name: "Samuel", 
             title: "Architect", 
             education: "Bsc. Arch", 
-            sittingImage: "Samuel_sitting.jpeg"
+            sittingImage: "Samuel_sitting.webp"
         },
         // Andrew
         { 
             name: "Andrew", 
             title: "Construction Project Manager", 
             education: "Bsc. Bld. Tech", 
-            sittingImage: "Andrew_standing.jpeg",
-            standingImage: "Andrew_sitting.jpeg"
+            sittingImage: "Andrew_standing.webp",
+            standingImage: "Andrew_sitting.webp"
         },
     ];
 
@@ -164,7 +164,7 @@ export const AboutPage = () => {
                     {/* Left: Hero Image */}
                     <div className="lg:col-span-7 aspect-video lg:h-[70vh] lg:aspect-auto overflow-hidden rounded-2xl shadow-xl">
                         <OptimizedImage 
-                            src={`${import.meta.env.BASE_URL}About Us View/our-family/The_people.jpeg`}
+                            src={`${import.meta.env.BASE_URL}About Us View/our-family/The_people.webp`}
                             alt="The Team"
                             priority={true}
                             className="w-full h-full object-cover object-center"

@@ -81,7 +81,7 @@ export function ContactSection() {
 
       {/* Right - Image */}
       <div className="hidden md:block w-full md:w-1/2 h-[50vh] md:h-auto relative bg-warm-light dark:bg-zinc-800 transition-colors duration-300">
-        <img src={`${import.meta.env.BASE_URL}Contact Hero/Scene7_5-2.png`} alt="Contact visual" className="w-full h-full object-cover" />
+        <img src={`${import.meta.env.BASE_URL}Contact Hero/Scene7_5-2.webp`} alt="Contact visual" className="w-full h-full object-cover" />
       </div>
     </section>
   );
