@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { OptimizedImage } from "./OptimizedImage";
 
 interface MobileGalleryCarouselProps {
   images: string[];
@@ -87,10 +88,11 @@ export function MobileGalleryCarousel({ images }: MobileGalleryCarouselProps) {
             }}
             className="absolute inset-0 cursor-grab active:cursor-grabbing"
           >
-            <img
+            <OptimizedImage
               src={images[index]}
               alt={`Gallery image ${index + 1}`}
               className="w-full h-full object-cover rounded-2xl shadow-2xl pointer-events-none"
+              containerClassName="w-full h-full"
             />
           </motion.div>
         </AnimatePresence>

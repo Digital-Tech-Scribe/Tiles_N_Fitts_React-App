@@ -3,6 +3,7 @@ import { projects } from '../data/projects';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { OptimizedImage } from '../components/OptimizedImage';
 
 export function ProjectDetailPage() {
   const { id } = useParams();
@@ -59,11 +60,12 @@ export function ProjectDetailPage() {
       {/* 1. Hero Section (First Image) */}
       <div className="h-[80vh] md:h-[90vh] w-full relative">
         <div className="absolute inset-0 bg-black/20 z-10" /> 
-        <img 
+        <OptimizedImage 
           src={project.image} 
           alt={project.title} 
-          loading="lazy"
+          priority={true}
           className="w-full h-full object-cover"
+          containerClassName="w-full h-full"
         />
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-20 text-white">
           <div className="max-w-[1920px] mx-auto">
@@ -110,11 +112,11 @@ export function ProjectDetailPage() {
                    transition={{ delay: index * 0.1 }}
                    className="aspect-[4/3] bg-zinc-100 dark:bg-zinc-800 overflow-hidden rounded-lg"
                 >
-                  <img 
+                  <OptimizedImage 
                     src={img} 
                     alt={`${project.title} view ${index + 1}`} 
-                    loading="lazy"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    containerClassName="w-full h-full"
                   />
                 </motion.div>
               ))}
@@ -158,11 +160,11 @@ export function ProjectDetailPage() {
                 className="group flex-shrink-0 w-[85vw] md:w-[400px] xl:w-[500px] 2xl:w-[600px] snap-start"
               >
                 <div className="aspect-[4/3] bg-warm-light dark:bg-zinc-900 overflow-hidden mb-6 relative rounded-lg">
-                  <img 
+                  <OptimizedImage 
                     src={p.image} 
                     alt={p.title} 
-                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    containerClassName="w-full h-full"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>

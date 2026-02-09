@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { OptimizedImage } from '../components/OptimizedImage';
 
 // Team Member Interface - Updated with sitting/standing images
 interface TeamMember {
@@ -12,15 +13,15 @@ interface TeamMember {
 
 // Team Member Card Component - With smooth cascading animation
 const TeamMemberCard = ({ member, index }: { member: TeamMember; index: number }) => {
-    const [isHovered, setIsHovered] = useState(false);
+    const [isActive, setIsActive] = useState(false);
     
     // Determine which images to use
     const primaryImage = member.sittingImage || member.standingImage;
-    const hasHoverEffect = member.sittingImage && member.standingImage;
+    const hasHoverEffect = !!(member.sittingImage && member.standingImage);
     
     return (
         <motion.div 
-            className="flex flex-col group"
+            className="flex flex-col group cursor-pointer touch-manipulation"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -29,51 +30,51 @@ const TeamMemberCard = ({ member, index }: { member: TeamMember; index: number }
                 delay: index * 0.1,  // Cascading delay based on index
                 ease: [0.25, 0.1, 0.25, 1]  // Smooth cubic-bezier
             }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => setIsActive(true)}
+            onMouseLeave={() => setIsActive(false)}
+            onClick={() => setIsActive(!isActive)}
         >
             {/* Portrait Image Container - With smooth sliding animation */}
-            {/* Portrait Image Container - With smooth sliding animation */}
-            <div className="aspect-[3/4] mb-4 overflow-hidden relative">
+            <div className="aspect-[3/4] mb-4 overflow-hidden relative rounded-lg bg-zinc-100 dark:bg-zinc-800">
                 {hasHoverEffect ? (
                     <>
                         {/* Sitting Image (Default) - slides up on hover */}
                         <div 
                             className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                             style={{ 
-                                transform: isHovered ? 'translateY(-100%)' : 'translateY(0)' 
+                                transform: isActive ? 'translateY(-100%)' : 'translateY(0)' 
                             }}
                         >
-                            <img 
+                            <OptimizedImage 
                                 src={`${import.meta.env.BASE_URL}About Us View/our-family/${member.sittingImage}`}
                                 alt={`${member.name} - sitting`}
-                                loading="lazy"
                                 className="w-full h-full object-cover"
+                                containerClassName="w-full h-full"
                             />
                         </div>
                         {/* Standing Image (Hover) - slides in from bottom */}
                         <div 
                             className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                             style={{ 
-                                transform: isHovered ? 'translateY(0)' : 'translateY(100%)' 
+                                transform: isActive ? 'translateY(0)' : 'translateY(100%)' 
                             }}
                         >
-                            <img 
+                            <OptimizedImage 
                                 src={`${import.meta.env.BASE_URL}About Us View/our-family/${member.standingImage}`}
                                 alt={`${member.name} - standing`}
-                                loading="lazy"
                                 className="w-full h-full object-cover"
+                                containerClassName="w-full h-full"
                             />
                         </div>
                     </>
                 ) : (
                     // Single image - smooth scale on hover
                     <div className="w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-105">
-                        <img 
+                        <OptimizedImage 
                             src={`${import.meta.env.BASE_URL}About Us View/our-family/${primaryImage}`}
                             alt={member.name}
-                            loading="lazy"
                             className="w-full h-full object-cover"
+                            containerClassName="w-full h-full"
                         />
                     </div>
                 )}
@@ -151,12 +152,13 @@ export const AboutPage = () => {
             <section className="px-6 md:px-12 pt-32 lg:pt-40 pb-24">
                 <div className="max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
                     {/* Left: Hero Image */}
-                    <div className="lg:col-span-7 h-[40vh] lg:h-[70vh] overflow-hidden rounded-2xl shadow-xl">
-                        <img 
+                    <div className="lg:col-span-7 h-[50vh] lg:h-[70vh] overflow-hidden rounded-2xl shadow-xl">
+                        <OptimizedImage 
                             src={`${import.meta.env.BASE_URL}About Us View/our-family/The_people.jpeg`}
                             alt="The Team"
-                            loading="lazy"
-                            className="w-full h-full object-cover [@media(min-width:1024px)_and_(max-width:1265px)]:object-contain object-[58%_center]"
+                            priority={true}
+                            className="w-full h-full object-cover object-center"
+                            containerClassName="w-full h-full"
                         />
                     </div>
                     {/* Right: Quote */}

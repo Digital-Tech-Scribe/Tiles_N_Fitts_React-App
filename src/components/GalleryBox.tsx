@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import { OptimizedImage } from "./OptimizedImage";
 
 interface GalleryBoxProps {
   sequence: string[];
@@ -72,10 +73,11 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
           }}
           className="w-full h-full"
         >
-          <img
+          <OptimizedImage
             src={sequence[index]}
             alt="Gallery item"
             className="w-full h-full object-cover pointer-events-none"
+            containerClassName="w-full h-full"
           />
         </motion.div>
       </AnimatePresence>
