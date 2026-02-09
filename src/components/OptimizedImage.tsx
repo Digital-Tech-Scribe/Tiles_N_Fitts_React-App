@@ -30,7 +30,9 @@ export function OptimizedImage({
   const unregisterRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    if (skipFadeIn) return;
+    // Only register PRIORITY images with the global loader.
+    // Lazy images will handle their own state locally but won't block the site.
+    if (!priority || skipFadeIn) return;
 
     // Register
     unregisterRef.current = registerImageLoad();
@@ -52,7 +54,7 @@ export function OptimizedImage({
             unregisterRef.current = null;
         }
     };
-  }, [src, skipFadeIn]);
+  }, [src, priority, skipFadeIn]);
 
   const onImageLoad = () => {
       setIsLoaded(true);
