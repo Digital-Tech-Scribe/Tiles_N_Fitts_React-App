@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { projects } from '../data/projects';
 import { Link } from 'react-router-dom';
+import { OptimizedImage } from './OptimizedImage';
 
 export function ProjectsSection() {
   const featuredProjectTitles = ['VERIDIAN', 'YANGO HOTEL', 'URBLE'];
@@ -23,7 +24,12 @@ export function ProjectsSection() {
         <div className="space-y-32">
           {featuredProjects.map((project) => <div key={project.id} className="relative group">
               <div className="w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-zinc-100 dark:bg-zinc-800 relative">
-                <img src={project.image} alt={project.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <OptimizedImage 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  containerClassName="w-full h-full"
+                />
 
                 {/* Hover Overlay Card */}
                 <div className="absolute top-1/2 right-12 md:right-24 -translate-y-1/2 w-[400px] bg-warm-light dark:bg-zinc-950 p-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden md:block shadow-xl">

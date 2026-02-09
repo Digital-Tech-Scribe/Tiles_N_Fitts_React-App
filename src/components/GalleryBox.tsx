@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { OptimizedImage } from "./OptimizedImage";
 
 interface GalleryBoxProps {
@@ -12,45 +12,57 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
   const [index, setIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const rotateImage = () => {
-    setIndex((prev) => (prev + 1) % sequence.length);
-  };
-
-  const startRotation = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(rotateImage, 4000); // 4 seconds cycle
-  };
-
-  const stopRotation = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  };
-
+  
   useEffect(() => {
-    // Independent timer management
-    if (!isHovered && !isTouched) {
-      // Start with a small stagger delay on first load
-      const timeout = setTimeout(startRotation, staggerDelay);
-      return () => {
-        clearTimeout(timeout);
-        stopRotation();
-      };
-    } else {
-      stopRotation();
-    }
-    return () => stopRotation();
-    return () => stopRotation();
-  }, [isHovered, isTouched, sequence.length, staggerDelay]); // Added dependencies safely
+    // Don't cycle if interaction is active
+    if (isHovered || isTouched) return;
+
+    // Calculate next index
+    const nextIndex = (index + 1) % sequence.length;
+    const nextImageSrc = sequence[nextIndex];
+
+    let timeoutId: NodeJS.Timeout;
+    let isCancelled = false;
+
+    // Create a "Smart Transition" loop
+    const scheduleNextTransition = async () => {
+      // 1. Wait for the standard delay (4s) + stagger (only on first run ideally, but simple here)
+      // We subtract a bit of time to account for preloading, or just add it.
+      // Let's stick to a robust 4s interval *between* transitions.
+      
+      timeoutId = setTimeout(() => {
+        if (isCancelled) return;
+
+        // 2. Preload the next image
+        const img = new Image();
+        img.src = nextImageSrc;
+
+        const performTransition = () => {
+           if (!isCancelled) setIndex(nextIndex);
+        };
+
+        if (img.complete) {
+            performTransition();
+        } else {
+            img.onload = performTransition;
+            img.onerror = performTransition; // Proceed even if error to avoid stuck gallery
+        }
+      }, 4000 + (index === 0 ? staggerDelay : 0)); 
+    };
+
+    scheduleNextTransition();
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [index, isHovered, isTouched, sequence, staggerDelay]);
 
   return (
     <div 
       className={`relative overflow-hidden rounded-lg cursor-pointer ${
         aspectRatio === "3/4" ? "aspect-[3/4]" : "aspect-[4/3]"
-      }`}
+      } bg-zinc-100 dark:bg-zinc-800`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={() => setIsTouched(true)}
@@ -63,19 +75,20 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
           animate={{ 
             x: 0, 
             opacity: 1,
-            scale: (isHovered || isTouched) ? 1.1 : 1
+            scale: (isHovered || isTouched) ? 1.05 : 1
           }}
           exit={{ x: "-100%", opacity: 0 }}
           transition={{ 
-            x: { duration: 2, ease: [0.22, 1, 0.36, 1] }, // Slow graceful slide
-            opacity: { duration: 1.5 },
-            scale: { duration: 1, ease: "easeOut" }
+            x: { duration: 1.2, ease: [0.25, 1, 0.5, 1] }, // Smoother slide
+            opacity: { duration: 0.8 },
+            scale: { duration: 0.5 }
           }}
-          className="w-full h-full"
+          className="absolute inset-0 w-full h-full"
         >
           <OptimizedImage
             src={sequence[index]}
             alt="Gallery item"
+            priority={true} // Priority true because we pre-loaded it!
             className="w-full h-full object-cover pointer-events-none"
             containerClassName="w-full h-full"
           />

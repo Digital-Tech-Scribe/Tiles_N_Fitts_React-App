@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { OptimizedImage } from '../components/OptimizedImage';
+import { usePageLoading } from '../contexts/LoadingContext';
 
 // Team Member Interface - Updated with sitting/standing images
 interface TeamMember {
@@ -96,6 +97,15 @@ const TeamMemberCard = ({ member, index }: { member: TeamMember; index: number }
 };
 
 export const AboutPage = () => {
+    const { setIsLoading } = usePageLoading();
+
+    useEffect(() => {
+        const heroImage = `${import.meta.env.BASE_URL}About Us View/our-family/The_people.jpeg`;
+        const img = new Image();
+        img.src = heroImage;
+        img.onload = () => setTimeout(() => setIsLoading(false), 300);
+        img.onerror = () => setIsLoading(false);
+    }, [setIsLoading]);
     
     // Updated team data - Reordered with correct roles
     const allTeam: TeamMember[] = [

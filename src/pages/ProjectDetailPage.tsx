@@ -4,11 +4,27 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { OptimizedImage } from '../components/OptimizedImage';
+import { usePageLoading } from '../contexts/LoadingContext';
 
 export function ProjectDetailPage() {
   const { id } = useParams();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const { setIsLoading } = usePageLoading();
+
+  const project = projects.find(p => p.id === Number(id));
+
+  // Preload project image
+  useEffect(() => {
+    if (project?.image) {
+        const img = new Image();
+        img.src = project.image;
+        img.onload = () => setTimeout(() => setIsLoading(false), 300);
+        img.onerror = () => setIsLoading(false);
+    } else {
+        setIsLoading(false);
+    }
+  }, [project, setIsLoading]);
 
   // Scroll to top on route change
   useEffect(() => {
@@ -24,8 +40,6 @@ export function ProjectDetailPage() {
     window.addEventListener('resize', checkTouch);
     return () => window.removeEventListener('resize', checkTouch);
   }, []);
-
-  const project = projects.find(p => p.id === Number(id));
   
   if (!project) {
     return (
