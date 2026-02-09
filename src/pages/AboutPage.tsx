@@ -162,13 +162,13 @@ export const AboutPage = () => {
             <section className="px-6 md:px-12 pt-32 lg:pt-40 pb-24">
                 <div className="max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
                     {/* Left: Hero Image */}
-                    <div className="lg:col-span-7 h-auto aspect-auto lg:h-[70vh] lg:aspect-auto overflow-hidden rounded-2xl shadow-xl">
+                    <div className="lg:col-span-7 h-auto lg:h-[70vh] overflow-hidden rounded-2xl shadow-xl">
                         <OptimizedImage 
                             src={`${import.meta.env.BASE_URL}About Us View/our-family/The_people.webp`}
                             alt="The Team"
                             priority={true}
-                            className="w-full h-full object-cover object-center"
-                            containerClassName="w-full h-full"
+                            className="w-full h-auto lg:h-full lg:object-cover lg:object-center"
+                            containerClassName="w-full h-auto lg:h-full"
                         />
                     </div>
                     {/* Right: Quote */}
