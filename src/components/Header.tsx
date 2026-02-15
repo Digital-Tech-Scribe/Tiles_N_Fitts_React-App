@@ -99,7 +99,7 @@ export function Header() {
               effectiveTheme === 'light' ? 'scale-[1.6]' : ''
             }`}
           />
-          <div className="flex flex-col">
+          <div className="flex flex-row whitespace-nowrap">
             <span className={`text-2xl font-bold tracking-tight uppercase transition-colors ${
               isScrolled 
                 ? 'text-zinc-900 dark:text-white' 
@@ -111,7 +111,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-8">
           {navItems.map((item, i) => {
             const id = item.toLowerCase();
             const isActive = activeSection === id;
@@ -181,7 +181,7 @@ export function Header() {
         </nav>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center gap-3">
+        <div className="lg:hidden flex items-center gap-3">
           <button
             onClick={toggleTheme}
             className="text-zinc-900 dark:text-white p-2"
@@ -222,7 +222,7 @@ export function Header() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="fixed top-24 left-0 right-0 bg-warm-light/95 dark:bg-zinc-900/95 backdrop-blur-lg border-b border-zinc-200 dark:border-zinc-800 md:hidden z-[99998] overflow-hidden"
+              className="fixed top-24 left-0 right-0 bg-warm-light/95 dark:bg-zinc-900/95 backdrop-blur-lg border-b border-zinc-200 dark:border-zinc-800 lg:hidden z-[99998] overflow-hidden"
             >
               <div className="flex flex-col p-8 space-y-6">
                 {navItems.map((item) => {

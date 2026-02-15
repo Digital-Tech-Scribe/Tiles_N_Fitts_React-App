@@ -124,12 +124,12 @@ export const AboutPage = () => {
             education: "Bsc. Arch", 
             standingImage: "Yazeed_standing.webp"
         },
-        // Korede
+        // Moshood
         { 
-            name: "Korede", 
+            name: "Moshood", 
             title: "Architect", 
             education: "Bsc. Arch", 
-            standingImage: "Korede_standing.webp"
+            standingImage: "Moshood_standing.webp"
         },
         // Azeez
         { 

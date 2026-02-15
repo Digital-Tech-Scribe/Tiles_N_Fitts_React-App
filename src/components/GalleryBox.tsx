@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { OptimizedImage } from "./OptimizedImage";
 
 interface GalleryBoxProps {
-  sequence: string[];
+  sequence: { src: string, projectId: number }[];
   aspectRatio: "3/4" | "4/3";
   staggerDelay?: number;
 }
@@ -12,6 +13,7 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
   const [index, setIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Don't cycle if interaction is active
@@ -19,17 +21,13 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
 
     // Calculate next index
     const nextIndex = (index + 1) % sequence.length;
-    const nextImageSrc = sequence[nextIndex];
+    const nextImageSrc = sequence[nextIndex].src;
 
     let timeoutId: NodeJS.Timeout;
     let isCancelled = false;
 
     // Create a "Smart Transition" loop
     const scheduleNextTransition = async () => {
-      // 1. Wait for the standard delay (4s) + stagger (only on first run ideally, but simple here)
-      // We subtract a bit of time to account for preloading, or just add it.
-      // Let's stick to a robust 4s interval *between* transitions.
-      
       timeoutId = setTimeout(() => {
         if (isCancelled) return;
 
@@ -45,7 +43,7 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
             performTransition();
         } else {
             img.onload = performTransition;
-            img.onerror = performTransition; // Proceed even if error to avoid stuck gallery
+            img.onerror = performTransition; 
         }
       }, 4000 + (index === 0 ? staggerDelay : 0)); 
     };
@@ -58,25 +56,34 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
     };
   }, [index, isHovered, isTouched, sequence, staggerDelay]);
 
+  const handleRedirect = () => {
+    const currentProject = sequence[index];
+    if (currentProject) {
+      navigate(`/project/${currentProject.projectId}`);
+      window.scrollTo(0, 0);
+    }
+  };
+
   return (
     <div 
       className={`relative overflow-hidden rounded-lg cursor-pointer ${
         aspectRatio === "3/4" ? "aspect-[3/4]" : "aspect-[4/3]"
-      } bg-zinc-100 dark:bg-zinc-800`}
+      } bg-zinc-100 dark:bg-zinc-800 group`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={() => setIsTouched(true)}
       onTouchEnd={() => setIsTouched(false)}
+      onClick={handleRedirect}
     >
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
-          key={sequence[index]}
-          initial={{ x: "100%", opacity: 0 }}
-          animate={{ 
-            x: 0, 
-            opacity: 1,
-            scale: (isHovered || isTouched) ? 1.05 : 1
-          }}
+           key={sequence[index].src}
+           initial={{ x: "100%", opacity: 0 }}
+           animate={{ 
+             x: 0, 
+             opacity: 1,
+             scale: (isHovered || isTouched) ? 1.05 : 1
+           }}
           exit={{ x: "-100%", opacity: 0 }}
           transition={{ 
             x: { duration: 1.2, ease: [0.25, 1, 0.5, 1] }, // Smoother slide
@@ -86,7 +93,7 @@ export function GalleryBox({ sequence, aspectRatio, staggerDelay = 0 }: GalleryB
           className="absolute inset-0 w-full h-full"
         >
           <OptimizedImage
-            src={sequence[index]}
+            src={sequence[index].src}
             alt="Gallery item"
             priority={true} // Priority true because we pre-loaded it!
             skipFadeIn={true} // Skip fade-in animation to prevent flicker

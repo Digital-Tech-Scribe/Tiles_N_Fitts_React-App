@@ -25,4 +25,8 @@ dist-ssr
 
 # Plans & Artifacts
 *_PLAN.md
+SKILL-PLAN_MODEL/
+PLAN.md
+.agent/
+brain/
 

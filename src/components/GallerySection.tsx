@@ -4,10 +4,17 @@ import { projects } from "../data/projects";
 import { GalleryBox } from "./GalleryBox";
 import { MobileGalleryCarousel } from "./MobileGalleryCarousel";
 
-// Consolidate and unique-ify images from all projects
-const ALL_IMAGES = Array.from(new Set(
-  projects.flatMap(p => [p.image, ...(p.gallery || [])])
-)).filter(Boolean);
+// Consolidate images with their project IDs
+interface GalleryImage {
+  src: string;
+  projectId: number;
+}
+
+const ALL_GALLERY_IMAGES: GalleryImage[] = projects.flatMap(p => 
+  [p.image, ...(p.gallery || [])]
+    .filter(Boolean)
+    .map(src => ({ src, projectId: p.id }))
+);
 
 // Shuffle helper
 const shuffle = <T,>(array: T[]): T[] => {
@@ -20,15 +27,15 @@ const shuffle = <T,>(array: T[]): T[] => {
 };
 
 export function GallerySection() {
-  const [sequences, setSequences] = useState<string[][]>([]);
+  const [sequences, setSequences] = useState<GalleryImage[][]>([]);
 
   // Initialize unique sequences for 5 boxes
   useEffect(() => {
-    const shuffled = shuffle(ALL_IMAGES);
+    const shuffled = shuffle(ALL_GALLERY_IMAGES);
     const boxCount = 5;
     const imagesPerBox = Math.floor(shuffled.length / boxCount);
     
-    const newSequences: string[][] = [];
+    const newSequences: GalleryImage[][] = [];
     for (let i = 0; i < boxCount; i++) {
       newSequences.push(shuffled.slice(i * imagesPerBox, (i + 1) * imagesPerBox));
     }
@@ -58,7 +65,6 @@ export function GallerySection() {
         </div>
 
         {/* Desktop View (5 Boxes) */}
-        {/* Removed global hover pause - now handled independently by each Box */}
         <div className="hidden md:grid md:grid-cols-3 gap-8">
           {/* Column 1 */}
           <div className="space-y-8">
@@ -100,7 +106,7 @@ export function GallerySection() {
 
         {/* Mobile View (Single Carousel) */}
         <div className="md:hidden">
-          <MobileGalleryCarousel images={ALL_IMAGES} />
+          <MobileGalleryCarousel images={ALL_GALLERY_IMAGES} />
         </div>
       </div>
     </section>

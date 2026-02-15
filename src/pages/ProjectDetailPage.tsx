@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { projects } from '../data/projects';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { OptimizedImage } from '../components/OptimizedImage';
@@ -11,12 +11,14 @@ export function ProjectDetailPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const { setIsLoading } = usePageLoading();
-
+  
   const project = projects.find(p => p.id === Number(id));
+  const [heroImage, setHeroImage] = useState<string | null>(null);
 
-  // Preload project image
+  // Initialize and preload project image
   useEffect(() => {
     if (project?.image) {
+        setHeroImage(project.image);
         const img = new Image();
         img.src = project.image;
         img.onload = () => setTimeout(() => setIsLoading(false), 300);
@@ -68,20 +70,37 @@ export function ProjectDetailPage() {
     }
   };
 
+  const handleHeroSwap = (imgSrc: string) => {
+    setHeroImage(imgSrc);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-warm-light dark:bg-zinc-900 transition-colors duration-300 text-zinc-900 dark:text-white">
       
-      {/* 1. Hero Section (First Image) */}
-      <div className="h-[80vh] md:h-[90vh] w-full relative">
-        <div className="absolute inset-0 bg-black/20 z-10" /> 
-        <OptimizedImage 
-          src={project.image} 
-          alt={project.title} 
-          priority={true}
-          className="w-full h-full object-cover"
-          containerClassName="w-full h-full"
-        />
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-20 text-white">
+      {/* 1. Hero Section (Dynamic Image) */}
+      <div className="h-[80vh] md:h-[90vh] w-full relative overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={heroImage}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <div className="absolute inset-0 bg-black/20 z-10" /> 
+            <OptimizedImage 
+              src={heroImage || project.image} 
+              alt={project.title} 
+              priority={true}
+              className="w-full h-full object-cover"
+              containerClassName="w-full h-full"
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-20 text-white pointer-events-none">
           <div className="max-w-[1920px] mx-auto">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
@@ -114,22 +133,28 @@ export function ProjectDetailPage() {
         </div>
 
         {/* 3. Gallery Grid */}
-        {project.gallery && project.gallery.length > 0 && (
+        {((project.gallery && project.gallery.length > 0) || project.image) && (
           <div className="space-y-4">
             <h2 className="text-2xl font-bold uppercase tracking-wide mb-8">Project Gallery</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {project.gallery.map((img, index) => (
+              {/* Include the main image in the gallery as well */}
+              {[project.image, ...(project.gallery || [])].map((img, index) => (
                 <motion.div 
                    key={index}
                    initial={{ opacity: 0, y: 20 }}
                    whileInView={{ opacity: 1, y: 0 }}
                    transition={{ delay: index * 0.1 }}
-                   className="aspect-[4/3] bg-zinc-100 dark:bg-zinc-800 overflow-hidden rounded-lg"
+                   className={`aspect-[4/3] bg-zinc-100 dark:bg-zinc-800 overflow-hidden rounded-lg cursor-pointer border-2 transition-all duration-300 ${
+                     heroImage === img 
+                       ? "border-zinc-900 dark:border-white scale-[0.98]" 
+                       : "border-transparent opacity-70 hover:opacity-100"
+                   }`}
+                   onClick={() => handleHeroSwap(img)}
                 >
                   <OptimizedImage 
                     src={img} 
                     alt={`${project.title} view ${index + 1}`} 
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     containerClassName="w-full h-full"
                   />
                 </motion.div>

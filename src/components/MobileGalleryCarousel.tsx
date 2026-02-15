@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { OptimizedImage } from "./OptimizedImage";
 
 interface MobileGalleryCarouselProps {
-  images: string[];
+  images: { src: string, projectId: number }[];
 }
 
 export function MobileGalleryCarousel({ images }: MobileGalleryCarouselProps) {
@@ -11,6 +12,7 @@ export function MobileGalleryCarousel({ images }: MobileGalleryCarouselProps) {
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const navigate = useNavigate();
 
   const paginate = useCallback((newDirection: number) => {
     setDirection(newDirection);
@@ -21,13 +23,20 @@ export function MobileGalleryCarousel({ images }: MobileGalleryCarouselProps) {
     if (!isPaused) {
       timerRef.current = setInterval(() => {
         paginate(1);
-      }, 3000); // 3 seconds per slide, but we will slow down animation to 2 seconds
+      }, 3000); 
     }
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isPaused, index, paginate]);
 
+  const handleRedirect = () => {
+    const currentProject = images[index];
+    if (currentProject) {
+      navigate(`/project/${currentProject.projectId}`);
+      window.scrollTo(0, 0);
+    }
+  };
 
   const variants = {
     enter: (direction: number) => ({
@@ -41,7 +50,7 @@ export function MobileGalleryCarousel({ images }: MobileGalleryCarouselProps) {
       opacity: 1,
       scale: 1,
       transition: {
-        x: { duration: 2, ease: [0.22, 1, 0.36, 1] }, // Slow graceful slide
+        x: { duration: 2, ease: [0.22, 1, 0.36, 1] }, 
         opacity: { duration: 1.5 },
         scale: { duration: 2 }
       }
@@ -64,8 +73,9 @@ export function MobileGalleryCarousel({ images }: MobileGalleryCarouselProps) {
         className="relative aspect-[4/5] w-full"
         onTouchStart={() => setIsPaused(true)}
         onTouchEnd={() => {
-          setTimeout(() => setIsPaused(false), 3000); // Resume after 3s
+          setTimeout(() => setIsPaused(false), 3000); 
         }}
+        onClick={handleRedirect}
       >
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
@@ -86,10 +96,10 @@ export function MobileGalleryCarousel({ images }: MobileGalleryCarouselProps) {
                 paginate(-1);
               }
             }}
-            className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            className="absolute inset-0 cursor-pointer"
           >
             <OptimizedImage
-              src={images[index]}
+              src={images[index].src}
               alt={`Gallery image ${index + 1}`}
               className="w-full h-full object-cover rounded-2xl shadow-2xl pointer-events-none"
               containerClassName="w-full h-full"
