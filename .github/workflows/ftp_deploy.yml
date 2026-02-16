@@ -2,7 +2,6 @@ name: Deploy to Namecheap (FTP)
 
 on:
   push:
-    branches:
   workflow_dispatch:
 
 jobs:
