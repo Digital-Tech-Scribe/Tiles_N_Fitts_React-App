@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { projects } from '../data/projects';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { OptimizedImage } from '../components/OptimizedImage';
 import { usePageLoading } from '../contexts/LoadingContext';
 
@@ -11,6 +11,13 @@ export function ProjectDetailPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const { setIsLoading } = usePageLoading();
+  
+  // Navigation states
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeftRef = useRef(0);
   
   const project = projects.find(p => p.id === Number(id));
   const [heroImage, setHeroImage] = useState<string | null>(null);
@@ -54,7 +61,25 @@ export function ProjectDetailPage() {
   // Get ALL other projects
   const otherProjects = projects.filter(p => p.id !== project.id);
 
-  const scrollRight = () => {
+  const checkScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScroll);
+      // Initial check
+      checkScroll();
+      return () => container.removeEventListener('scroll', checkScroll);
+    }
+  }, [otherProjects]);
+
+  const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
       const firstChild = container.firstElementChild as HTMLElement;
@@ -62,12 +87,36 @@ export function ProjectDetailPage() {
         const style = window.getComputedStyle(container);
         const gap = parseInt(style.gap) || 0;
         const scrollAmount = firstChild.offsetWidth + gap;
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      } else {
-        // Fallback
-        container.scrollBy({ left: 400, behavior: 'smooth' });
+        container.scrollBy({ 
+          left: direction === 'right' ? scrollAmount : -scrollAmount, 
+          behavior: 'smooth' 
+        });
       }
     }
+  };
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (isTouchDevice || !scrollContainerRef.current) return;
+    isDragging.current = true;
+    startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
+    scrollLeftRef.current = scrollContainerRef.current.scrollLeft;
+    scrollContainerRef.current.style.scrollBehavior = 'auto'; // Disable smooth scroll for drag
+    scrollContainerRef.current.style.cursor = 'grabbing';
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5; // multiplier for speed
+    scrollContainerRef.current.scrollLeft = scrollLeftRef.current - walk;
+  };
+
+  const onMouseUp = () => {
+    if (!scrollContainerRef.current) return;
+    isDragging.current = false;
+    scrollContainerRef.current.style.scrollBehavior = 'smooth';
+    scrollContainerRef.current.style.cursor = 'grab';
   };
 
   const handleHeroSwap = (imgSrc: string) => {
@@ -189,8 +238,12 @@ export function ProjectDetailPage() {
           {/* Horizontal Scroll Container */}
           <div 
             ref={scrollContainerRef}
-            className="flex gap-8 overflow-x-auto pb-8 snap-x no-scrollbar"
+            className={`flex gap-8 overflow-x-auto pb-8 snap-x no-scrollbar select-none ${!isTouchDevice ? 'cursor-grab' : ''}`}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseUp}
           >
             {otherProjects.map((p) => (
               <Link 
@@ -222,16 +275,43 @@ export function ProjectDetailPage() {
             <div className="w-12 md:w-24 xl:w-48 flex-shrink-0" />
           </div>
 
-          {/* Desktop Click Interaction Zone - Fixed to Click Only */}
+          {/* Desktop Navigation Arrows */}
           {!isTouchDevice && (
-            <div 
-              className="absolute top-0 right-0 bottom-0 w-[150px] md:w-[200px] z-30 flex items-center justify-end pr-12 cursor-pointer bg-gradient-to-l from-zinc-50 dark:from-zinc-800 via-zinc-50/80 dark:via-zinc-800/80 to-transparent group"
-              onClick={scrollRight}
-            >
-              <div className="w-16 h-16 bg-zinc-900 dark:bg-warm-light rounded-full flex items-center justify-center text-white dark:text-zinc-900 shadow-xl transform transition-all duration-300 group-hover:scale-110 group-hover:translate-x-1 group-hover:bg-zinc-800 dark:group-hover:bg-zinc-100 active:scale-95">
-                <ChevronRight size={32} />
-              </div>
-            </div>
+            <>
+              {/* Left Arrow */}
+              <AnimatePresence>
+                {canScrollLeft && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="absolute top-0 left-0 bottom-0 w-[150px] md:w-[200px] z-30 flex items-center justify-start pl-12 cursor-pointer bg-gradient-to-r from-zinc-50 dark:from-zinc-800 via-zinc-50/80 dark:via-zinc-800/80 to-transparent group"
+                    onClick={() => handleScroll('left')}
+                  >
+                    <div className="w-16 h-16 bg-zinc-900 dark:bg-warm-light rounded-full flex items-center justify-center text-white dark:text-zinc-900 shadow-xl transform transition-all duration-300 group-hover:scale-110 group-hover:-translate-x-1 group-hover:bg-zinc-800 dark:group-hover:bg-zinc-100 active:scale-95">
+                      <ChevronLeft size={32} />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Right Arrow */}
+              <AnimatePresence>
+                {canScrollRight && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="absolute top-0 right-0 bottom-0 w-[150px] md:w-[200px] z-30 flex items-center justify-end pr-12 cursor-pointer bg-gradient-to-l from-zinc-50 dark:from-zinc-800 via-zinc-50/80 dark:via-zinc-800/80 to-transparent group"
+                    onClick={() => handleScroll('right')}
+                  >
+                    <div className="w-16 h-16 bg-zinc-900 dark:bg-warm-light rounded-full flex items-center justify-center text-white dark:text-zinc-900 shadow-xl transform transition-all duration-300 group-hover:scale-110 group-hover:translate-x-1 group-hover:bg-zinc-800 dark:group-hover:bg-zinc-100 active:scale-95">
+                      <ChevronRight size={32} />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
           )}
 
         </div>
